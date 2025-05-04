@@ -2,6 +2,7 @@ import {createWebHistory, createRouter } from 'vue-router';
 import UserRegistrationComponent from '../views/components/UserRegistrationComponent.vue';
 import LoginComponent from '../views/components/LoginComponent.vue';
 import BoardListComponent from '../views/components/BoardListComponent.vue';
+import UsersComponent from '../views/components/UsersComponent.vue';
 
 
 const routes=[
@@ -16,12 +17,16 @@ const routes=[
 		component: LoginComponent,
 	},
 	{
-		path: '/registration',
+		path: '/register',
 		component: UserRegistrationComponent,
 	},
 	{
 		path: '/boards',
 		component: BoardListComponent,
+	},
+	{
+		path: '/users',
+		component: UsersComponent,
 	},
 ];
 

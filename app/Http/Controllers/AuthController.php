@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -17,13 +18,22 @@ class AuthController extends Controller
             'password' => 'required|string|min:6|confirmed',
         ]);
 
-        $user = User::create([
+        $userInfo = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => bcrypt($validated['password']),
+            'password' => Hash::make($validated['password']),
         ]);
 
-        return response()->json(['message' => '회원가입 성공']);
+        $token = $userInfo->createToken('access_token')->plainTextToken;
+
+        $responseData = [
+            'success' => true
+            ,'msg' => '회원가입 성공'
+            ,'accessToken' => $token
+            ,'data' => $userInfo->toArray()
+        ];
+
+        return response()->json($responseData, 200);
     }
 
     // 로그인
@@ -55,7 +65,10 @@ class AuthController extends Controller
     // 로그아웃
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $token = $request->user()->currentAccessToken();
+        if($token && method_exists($token, 'delete')) {
+            $token->delete();
+        }
         return response()->json(['message' => '로그아웃 완료']);
     }
     

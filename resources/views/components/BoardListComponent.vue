@@ -1,77 +1,145 @@
 <template>
-    <div class="board-list-box">
-        <!-- (item.board_id) 로 모달 오픈시 board_id 를 보내주기 -->
-        <div v-for="item in boardList" :key="item" @click="openModal(item.board_id)" class="item">
-            <img :src="item.img">
+    <div>
+        <div class="top-container">
+            <h2>프로젝트 목록</h2>
+            <button class="create-btn">+ 프로젝트 생성</button>
         </div>
-    </div>
+  
+        <div class="card-container">
+            <div class="user-card">
+                <img class="user-icon" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="user icon" />
+                <p class="title">프로젝트1</p>
+                <p class="owner">담당자: 왕만두, 왕만두</p>
+    
+                <!-- <select v-model="project.status" @change="updateStatus(project)" class="status-select"> -->
+                <select class="status-select">
+                <option value="대기">대기</option>
+                <option value="진행중">진행중</option>
+                <option value="완료">완료</option>
+                </select>
+            </div>
+    
+            <div class="user-card">
+                <img class="user-icon" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="user icon" />
+                <p class="title">프로젝트1</p>
+                <p class="owner">왕만두, 왕만두</p>
+    
+                <!-- <select v-model="project.status" @change="updateStatus(project)" class="status-select"> -->
+                <select class="status-select">
+                <option value="대기">대기</option>
+                <option value="진행중">진행중</option>
+                <option value="완료">완료</option>
+                </select>
+            </div>
 
-    <div v-show="modalFlg" class="board-detail-box">
-        <div v-if="boardDetail" class="item">
-            <img :src="boardDetail.img">
-            <hr>
-            <p>{{ boardDetail.content }}</p>
-            <hr>
-            <div class="etc-box">
-                <span>{{ boardDetail.user.name }}</span>
-                <button @click="closeModal" class="btn btn-header btn-bg-black">닫기</button>
+            <div class="user-card">
+                <img class="user-icon" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="user icon" />
+                <p class="title">프로젝트1</p>
+                <p class="owner">왕만두, 왕만두</p>
+    
+                <!-- <select v-model="project.status" @change="updateStatus(project)" class="status-select"> -->
+                <select class="status-select">
+                <option value="대기">대기</option>
+                <option value="진행중">진행중</option>
+                <option value="완료">완료</option>
+                </select>
             </div>
         </div>
     </div>
-</template>
+  </template>
+  
 <script setup>
+import { ref } from 'vue'
+import { router } from '@inertiajs/vue3'
 
-import { computed, onBeforeMount, ref } from 'vue';
-//  useStore 해야 store. ~ 가져올수 있음
-import { useStore } from 'vuex';
+const props = defineProps({ project: Object })
 
-const store = useStore();
-
-// 보드상세 정보
-const boardDetail = computed(() => store.state.board.boardDetail);
-const boardList = computed(() => store.state.board.boardList);
-
-onBeforeMount(() => {
-    if(store.state.board.boardList.length < 1) {
-        store.dispatch('board/boardListPagination');
-    }
-});
-
-// ----------------
-// modal 관련
-// ----------------
-    // modal 숨기기
-    const modalFlg = ref(false);
-    // modal 열기
-    const openModal = (id) => {
-        store.dispatch('board/showBoard', id);
-        modalFlg.value = true;
-    };
-    // modal 닫기
-    const closeModal = () => {
-        modalFlg.value = false;
-    };
-
-// ----------------
-// 스크롤 이벤트
-// ----------------
-const boardScollEvent = () => {
-    // 디바운싱
-    if(store.state.board.controllFlg) {
-        const docHeight = document.documentElement.scrollHeight;
-        const winHeight = window.innerHeight;
-        const nowHeight = window.scrollY;
-        const viewHeight = docHeight - winHeight;
-
-        // console.log(viewHeight, nowHeight);
-        if(viewHeight <= nowHeight) {
-            store.dispatch('board/boardListPagination');
-        }
-    }
+function updateStatus(project) {
+  router.put(`/projects/${project.id}/status`, {
+    status: project.status
+  })
 }
-window.addEventListener('scroll', boardScollEvent);
-
 </script>
-<style>
-@import url(../../../css/boardList.css);
-</style>
+  
+<style scoped>
+    .top-container {
+        display: flex;
+        justify-content: space-evenly; 
+        align-items: center;           
+        width: 100%;
+        padding: 20px;
+    }
+
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .create-btn {
+        display: inline-block;
+        margin-bottom: 16px;
+        background: #3490dc;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        margin-left: 600px;
+    }
+    .create-btn:hover {
+        background: #2367a0;
+        color: white;
+    }
+
+    .user-row-scroll {
+    display: flex;
+    flex-wrap: wrap;       
+    overflow-x: auto;       
+    gap: 16px;
+    padding: 10px;
+    }
+
+    .user-card {
+    flex: 0 0 auto;
+    width: 270px;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    text-align: center;
+    cursor: pointer;
+    }
+
+    .user-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    margin-bottom: 8px;
+    }
+
+    .user-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+    }
+
+    .user-email {
+    font-size: 14px;
+    color: #555;
+    }
+
+    .status-select {
+    margin-top: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    }
+
+    .title {
+        font-weight: 500;
+        font-size: 20px;
+    }
+  </style>
