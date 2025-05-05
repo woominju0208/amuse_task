@@ -34,7 +34,6 @@ export default {
             .then(response => {
                 // 토큰저장(local storage)
                 localStorage.setItem('accessToken', response.data.accessToken);
-                localStorage.setItem('refreshToken', response.data.refreshToken);
                 localStorage.setItem('userInfo', JSON.stringify(response.data.data));
                 context.commit('setAuthFlg', true);
                 context.commit('setUserInfo', response.data.data);

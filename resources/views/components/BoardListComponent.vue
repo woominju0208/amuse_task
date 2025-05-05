@@ -1,63 +1,47 @@
 <template>
     <div>
         <div class="top-container">
-            <h2>프로젝트 목록</h2>
-            <button class="create-btn">+ 프로젝트 생성</button>
+            <h2 class="form-title">프로젝트 목록</h2>
+            <router-link to="/boards/store"><button class="create-btn">+ 프로젝트 생성</button></router-link>
         </div>
   
         <div class="card-container">
-            <div class="user-card">
+            <div v-for="item in boardList" :key="item" class="user-card">
                 <img class="user-icon" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="user icon" />
-                <p class="title">프로젝트1</p>
-                <p class="owner">담당자: 왕만두, 왕만두</p>
+                <p class="title">{{ item.title }}</p>
+                <p class="owner">담당자: {{ item.user.name }}</p>
     
-                <!-- <select v-model="project.status" @change="updateStatus(project)" class="status-select"> -->
-                <select class="status-select">
+                <select class="status-select" v-model="item.status" @change="updateStatus(item)">
                 <option value="대기">대기</option>
                 <option value="진행중">진행중</option>
                 <option value="완료">완료</option>
                 </select>
             </div>
+            
     
-            <div class="user-card">
-                <img class="user-icon" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="user icon" />
-                <p class="title">프로젝트1</p>
-                <p class="owner">왕만두, 왕만두</p>
-    
-                <!-- <select v-model="project.status" @change="updateStatus(project)" class="status-select"> -->
-                <select class="status-select">
-                <option value="대기">대기</option>
-                <option value="진행중">진행중</option>
-                <option value="완료">완료</option>
-                </select>
-            </div>
-
-            <div class="user-card">
-                <img class="user-icon" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="user icon" />
-                <p class="title">프로젝트1</p>
-                <p class="owner">왕만두, 왕만두</p>
-    
-                <!-- <select v-model="project.status" @change="updateStatus(project)" class="status-select"> -->
-                <select class="status-select">
-                <option value="대기">대기</option>
-                <option value="진행중">진행중</option>
-                <option value="완료">완료</option>
-                </select>
-            </div>
         </div>
     </div>
   </template>
   
 <script setup>
-import { ref } from 'vue'
+import { computed, onMounted } from 'vue'
 import { router } from '@inertiajs/vue3'
+import { useStore } from 'vuex'
 
+const store = useStore();
 const props = defineProps({ project: Object })
 
+
+onMounted(() => {
+    store.dispatch('board/indexBoard');
+})
+const boardList = computed(() => store.state.board.boardList);
+console.log(store.state.board.boardList);
+
 function updateStatus(project) {
-  router.put(`/projects/${project.id}/status`, {
-    status: project.status
-  })
+    // console.log('🔄 상태 변경 실행됨:', project.status);
+    console.log('🔍 project:', project);
+    store.dispatch('board/updateStatus', project);
 }
 </script>
   
@@ -87,7 +71,7 @@ function updateStatus(project) {
         text-decoration: none;
         border: none;
         cursor: pointer;
-        margin-left: 600px;
+        margin-left: 500px;
     }
     .create-btn:hover {
         background: #2367a0;

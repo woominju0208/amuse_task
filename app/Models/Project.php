@@ -24,6 +24,6 @@ class Project extends Model
     }
 
     public function user() {
-        return $this->belongsTo(User::class, 'user_id')->select('user_id', 'name'); 
+        return $this->belongsTo(User::class, 'user_id'); 
     }
 }

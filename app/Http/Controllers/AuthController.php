@@ -57,8 +57,9 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => '로그인 성공',
-            'access_token' => $token,
-            'token_type' => 'Bearer',
+            'accessToken' => $token,
+            'tokenType' => 'Bearer',
+            'data' => $user,
         ]);
     }
 
