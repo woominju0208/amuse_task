@@ -6,6 +6,7 @@ export default {
     state: () => ({
         boardList: [],
         boardDetail: null,
+        userList: [],
     }),
     mutations: {
         setBoardList(state, boardList) {
@@ -13,6 +14,12 @@ export default {
         },
         setBoardDetail(state, board) {
             state.boardDetail = board;
+        },
+        // setBoardListUnshift(state, board) {
+        //     state.boardList.unshift(board);
+        // },
+        setUserList(state, userList) {
+            state.userList = userList;
         },
 
 
@@ -29,7 +36,7 @@ export default {
             axios.get(url, config)
             .then(response => {
                 context.commit('setBoardList', response.data.boardList);
-                console.log(response.data.boardList);
+                // console.log('🟢 API 응답 도착:', response.data);
             })
             .catch(error => {
                 console.log("API 호출 실패");
@@ -74,7 +81,7 @@ export default {
         },
         // 프로젝트 생성
         storeBoard(context, data) {
-            const url = '/api/boards';
+            const url = '/api/boards/store';
             const config = {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -84,25 +91,38 @@ export default {
 
             // form data  생성
             const formData = new FormData();
-            formData.append('content', data.content);
-            formData.append('file', data.file);
+            formData.append('title', data.title);
+            formData.append('description', data.description);
+
 
             axios.post(url, formData, config)
             .then(response => {
-                // 글작성 후 최상단 위치
-                context.commit('setBoardListUnshift', response.data.board);
-                // 다른 모듈 접근
-                context.commit('user/setUserInfoBoardsCount', null);
-
+                // context.commit('setBoardListUnshift', response.data.board);
                 router.replace('/boards');
             })
             .catch(error => {
                 console.log(error);
+            });
+        },
+
+        indexUser(context, data) {
+            const url = '/api/users/';
+            const config = {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+                }}
+            
+            axios.get(url, config)
+            .then(response => {
+                context.commit('setUserList', response.data.userList);
+                console.log('🟢 API 응답 도착:', response.data.userList);
             })
-            .finally(() => {
-                context.commit('setControllFlg', true);
+            .catch(error => {
+                console.log(error);
             });
         }
+
+
     },
     getters: {
         getNextPage(state) {

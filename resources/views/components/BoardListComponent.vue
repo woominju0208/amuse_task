@@ -9,7 +9,8 @@
             <div v-for="item in boardList" :key="item" class="user-card">
                 <img class="user-icon" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="user icon" />
                 <p class="title">{{ item.title }}</p>
-                <p class="owner">담당자: {{ item.user.name }}</p>
+                <p class="owner" v-if="item.user">담당자: {{ item.user.name }}</p>
+                <p class="owner" v-else>담당자: 없음</p>
     
                 <select class="status-select" v-model="item.status" @change="updateStatus(item)">
                 <option value="대기">대기</option>
@@ -17,38 +18,39 @@
                 <option value="완료">완료</option>
                 </select>
             </div>
-            
-    
         </div>
     </div>
   </template>
   
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { useStore } from 'vuex'
 
 const store = useStore();
 const props = defineProps({ project: Object })
 
+// import { toRefs } from 'vue'
+// const { boardList } = toRefs(store.state.board)
 
 onMounted(() => {
     store.dispatch('board/indexBoard');
 })
 const boardList = computed(() => store.state.board.boardList);
-console.log(store.state.board.boardList);
 
 function updateStatus(project) {
     // console.log('🔄 상태 변경 실행됨:', project.status);
     console.log('🔍 project:', project);
     store.dispatch('board/updateStatus', project);
 }
+
+
 </script>
   
 <style scoped>
     .top-container {
         display: flex;
-        justify-content: space-evenly; 
+        justify-content: space-between; 
         align-items: center;           
         width: 100%;
         padding: 20px;
@@ -58,7 +60,8 @@ function updateStatus(project) {
         display: flex;
         flex-wrap: wrap;
         gap: 20px;
-        justify-content: center;
+        justify-content: flex-start;
+        margin-left: 30px;
     }
 
     .create-btn {
@@ -125,5 +128,34 @@ function updateStatus(project) {
     .title {
         font-weight: 500;
         font-size: 20px;
+    }
+
+    /* BoardDetail */
+    .board-detail-box {
+        position: fixed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        width: 100vw;
+        height: 100vh;
+    }
+    .board-detail-box > .item {
+        /* width: 70vw; */
+        width: 500px;
+        height: 500px;
+        max-width: 700px;
+        background-color: #fff;
+        padding: 10px;
+    }
+    .board-detail-box > .item > img {
+        width: 100%;
+    }
+    .board-detail-box > .item > .etc-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
   </style>

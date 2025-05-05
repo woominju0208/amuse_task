@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -43,12 +44,13 @@ class BoardController extends Controller
             return response()->json(['success' => false, 'msg' => '인증된 사용자 아님'], 401);
         }
         $insertData = $request->only(['title', 'description']);
-        $insertData['user_id'] = $user->id;
+        $insertData['user_id'] = $user->user_id;
         $insertData['status'] = '대기';
 
 
         // insert
         $board = Project::create($insertData);
+        $board = Project::with('user')->find($board->user_id);
 
         $responseData = [
             'success' => true
@@ -57,5 +59,29 @@ class BoardController extends Controller
         ];
 
         return response()->json($responseData, 200);
+    }
+
+    public function show(Request $request) {
+        $taskList = Project::with('task')->orderBy('created_at', 'DESC')->get();
+
+        $responseData = [
+            'success' => true
+            ,'msg' => '프로젝트 상세 획득 성공'
+            ,'taskList' => $taskList->toArray()
+        ];
+        
+        return response()->json($responseData, 200);
+    }
+
+    public function userIndex(Request $request) {
+        $userList = User::orderBy('created_at', 'DESC')->get();
+        $responseData = [
+            'success' => true
+            ,'msg' => '사용자 획득 성공'
+            ,'userList' => $userList->toArray()
+        ];
+        
+        return response()->json($responseData, 200);
+
     }
 }

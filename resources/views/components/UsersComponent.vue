@@ -5,17 +5,26 @@
         <hr>
       </div>
       <div class="user-row-scroll">
-        <div class="user-card" v-for="i in 10" :key="i">
+        <div class="user-card" v-for="item in userList" :key="item">
           <img class="user-icon" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="user icon" />
-          <p class="user-name">홍길동</p>
-          <p class="user-email">mandu@gmail.com</p>
+          <p class="user-name">{{ item.name }}</p>
+          <p class="user-email">{{ item.email }}</p>
         </div>
       </div>
     </div>
   </template>
 
 <script setup>
+import { computed, onMounted } from 'vue';
+import { useStore } from 'vuex';
 
+const store = useStore();
+
+onMounted(() => {
+    store.dispatch('board/indexUser');
+})
+const userList = computed(() => store.state.board.userList);
+console.log(store.state.board.userList);
 </script>
 
 <style scoped>

@@ -77,7 +77,7 @@
   
   /* router-view 영역을 감싸는 콘텐츠 컨테이너 */
   main .container {
-    max-width: 960px;
+    max-width: 1300px;
     margin: 0 auto;
     background: #fff;
     border: 1px solid #ddd;

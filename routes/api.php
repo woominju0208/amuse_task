@@ -29,4 +29,9 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('/boards/{id}/status', [BoardController::class, 'updateStatus']);
     // 프로젝트 생성
     Route::post('/boards/store', [BoardController::class, 'store'])->name('boards.store');
+    // 프로젝트 상세
+    Route::get('/boards/{id}', [BoardController::class, 'show'])->name('boards.show');
+
+    // 사용자 출력
+    Route::get('/users', [BoardController::class, 'userIndex'])->name('users.index');
 });
