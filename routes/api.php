@@ -32,6 +32,9 @@ Route::middleware('auth:sanctum')->group(function() {
     // 프로젝트 상세
     Route::get('/boards/{id}', [BoardController::class, 'show'])->name('boards.show');
 
+    // 테스크 생성
+    Route::post('/boards/{id}/task', [BoardController::class, 'taskStore'])->name('tasks.store');
+
     // 사용자 출력
     Route::get('/users', [BoardController::class, 'userIndex'])->name('users.index');
 });

@@ -9,6 +9,11 @@
           <img class="user-icon" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="user icon" />
           <p class="user-name">{{ item.name }}</p>
           <p class="user-email">{{ item.email }}</p>
+          <!-- <p class="user-email">참여 프로젝트:{{ item.project.title }}</p> -->
+          <p class="user-email" v-if="item.project.length > 0">
+            <b>참여 프로젝트:</b> {{ item.project.map(p => p.title).join(', ') }}
+          </p>
+          <p class="user-email" v-else><b>참여 프로젝트:</b> 없음</p>
         </div>
       </div>
     </div>

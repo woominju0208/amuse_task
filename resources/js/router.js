@@ -4,6 +4,8 @@ import LoginComponent from '../views/components/LoginComponent.vue';
 import BoardListComponent from '../views/components/BoardListComponent.vue';
 import UsersComponent from '../views/components/UsersComponent.vue';
 import BoardCreateComponent from '../views/components/BoardCreateComponent.vue';
+import BoardDetailComponent from '../views/components/BoardDetailComponent.vue';
+import TaskCreateComponent from '../views/components/TaskCreateComponent .vue';
 
 
 const routes=[
@@ -25,6 +27,11 @@ const routes=[
 		path: '/boards',
 		component: BoardListComponent,
 	},
+
+	{
+		path: '/boards/:id',
+		component: BoardDetailComponent,
+	},
 	{
 		path: '/boards/store',
 		component: BoardCreateComponent,
@@ -32,6 +39,10 @@ const routes=[
 	{
 		path: '/users',
 		component: UsersComponent,
+	},
+	{
+		path: '/boards/:id/task',
+		component: TaskCreateComponent,
 	},
 ];
 

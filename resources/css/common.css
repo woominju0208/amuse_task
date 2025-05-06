@@ -26,11 +26,15 @@
     font-weight: bold;
     margin-bottom: 30px;
   }
+  .menu {
+    list-style-type: none;
+  }
   .menu a {
     display: block;
     color: #333;
     text-decoration: none;
     padding: 10px 0;
+    cursor: pointer;
   }
   .menu a:hover {
     color: #0077cc;
@@ -83,26 +87,24 @@
     border: 1px solid #ddd;
     padding: 24px;
     border-radius: 6px;
-    min-height: 500px;
+    min-height: 1500px;
   }
 
   /* Form */
 .form-box {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
+    /* display: grid;
+    grid-template-rows: 1fr;
+    gap: 5px; */
     place-items: center;
-    margin: 20px auto;
+    margin: 40px auto;
     width: 700px;
     border: 1px solid #c5c5c5;
-    padding: 100px 20px;
-    margin-top: 50px;
-    padding: 100px;
+    padding: 40px 20px;
     margin-left: 110px;
     min-height: 500px;
 }
 .form-box > * {
-    width: 80%;
+    width: 90%;
     margin: 5px;
 }
 .form-box > input:not([type="file"]) {
@@ -122,14 +124,22 @@
     font-size: 2rem;
     font-weight: 900;
     margin: 20px;
+    margin-bottom: 100px;
+    padding-top: 20px;
     text-align: center;
 }
 textarea {
     width: 100%;
     height: 160px;
-    border: none;
+    border: 1px solid #c5c5c5;
+    border-radius: 5px;
     resize: none;
     padding: 5px;
+}
+input:focus {
+  outline: none;
+  border: 1px solid #c5c5c5;
+  border-radius: 10px;
 }
 textarea:focus {
     outline: none;

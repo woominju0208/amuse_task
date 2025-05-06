@@ -5,15 +5,15 @@ export default {
     namespaced: true,
     state: () => ({
         boardList: [],
-        boardDetail: null,
+        boardDetail: [],
         userList: [],
     }),
     mutations: {
         setBoardList(state, boardList) {
             state.boardList = boardList;
         },
-        setBoardDetail(state, board) {
-            state.boardDetail = board;
+        setBoardDetail(state, boardDetail) {
+            state.boardDetail = boardDetail;
         },
         // setBoardListUnshift(state, board) {
         //     state.boardList.unshift(board);
@@ -73,7 +73,8 @@ export default {
 
             axios.get(url, config)
             .then(response => {
-                context.commit('setBoardDetail', response.data.board);
+                context.commit('setBoardDetail', response.data.boardDetail);
+                console.log(response.data.boardDetail);
             })
             .catch(error => {
                 console.log(error);
@@ -105,6 +106,28 @@ export default {
             });
         },
 
+        // 테스크 생성
+        storeTask(context, data) {
+            const url =  `/api/boards/${data.project_id}/task`;
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' +localStorage.getItem('accessToken'),
+                }
+            };
+
+            axios.post(url, {
+                project_id: data.project_id,
+                content: data.content
+              }, config)
+            .then(response => {
+                router.back();
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        },
+
         indexUser(context, data) {
             const url = '/api/users/';
             const config = {
@@ -115,7 +138,7 @@ export default {
             axios.get(url, config)
             .then(response => {
                 context.commit('setUserList', response.data.userList);
-                console.log('🟢 API 응답 도착:', response.data.userList);
+                // console.log('API 응답 도착:', response.data.userList);
             })
             .catch(error => {
                 console.log(error);

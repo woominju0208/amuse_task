@@ -7,15 +7,15 @@
   
         <div class="card-container">
             <div v-for="item in boardList" :key="item" class="user-card">
-                <img class="user-icon" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="user icon" />
-                <p class="title">{{ item.title }}</p>
-                <p class="owner" v-if="item.user">담당자: {{ item.user.name }}</p>
+                <img class="user-icon" @click="goToDetail(item.project_id)" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="user icon" />
+                <p class="title" @click="goToDetail(item.project_id)">{{ item.title }}</p>
+                <p class="owner" @click="goToDetail(item.project_id)" v-if="item.user">담당자: {{ item.user.name }}</p>
                 <p class="owner" v-else>담당자: 없음</p>
     
                 <select class="status-select" v-model="item.status" @change="updateStatus(item)">
-                <option value="대기">대기</option>
-                <option value="진행중">진행중</option>
-                <option value="완료">완료</option>
+                    <option value="대기">대기</option>
+                    <option value="진행중">진행중</option>
+                    <option value="완료">완료</option>
                 </select>
             </div>
         </div>
@@ -23,12 +23,12 @@
   </template>
   
 <script setup>
-import { computed, onMounted, ref } from 'vue'
-import { router } from '@inertiajs/vue3'
+import { computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 
 const store = useStore();
-const props = defineProps({ project: Object })
+// const props = defineProps({ project: Object })
 
 // import { toRefs } from 'vue'
 // const { boardList } = toRefs(store.state.board)
@@ -42,6 +42,11 @@ function updateStatus(project) {
     // console.log('🔄 상태 변경 실행됨:', project.status);
     console.log('🔍 project:', project);
     store.dispatch('board/updateStatus', project);
+}
+
+const router = useRouter();
+function goToDetail(id) {
+    router.push(`/boards/${id}`);
 }
 
 

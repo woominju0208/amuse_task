@@ -43,4 +43,8 @@ class User extends Authenticatable
     protected function serializeDate(DateTimeInterface $date){
         return $date->format('Y-m-d H:i:s');
     }
+
+    public function project() {
+        return $this->hasMany(Project::class, 'user_id', 'user_id'); 
+    }
 }

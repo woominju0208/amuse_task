@@ -4,8 +4,8 @@ import router from "../../router";
 export default {
     namespaced: true,
     state: () => ({
-        // authFlg: localStorage.getItem('accessToken') ? true : false,
-        // userInfo:  localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : {},
+        authFlg: localStorage.getItem('accessToken') ? true : false,
+        userInfo:  localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : {},
     }),
     mutations: {
         setAuthFlg(state, flg) {
@@ -40,6 +40,7 @@ export default {
 
                 alert('로그인 완료');
                 // 로그인후 보드페이지로 이동
+                // window.location.reload();
                 router.replace('/boards');
             })
             .catch(error => {
