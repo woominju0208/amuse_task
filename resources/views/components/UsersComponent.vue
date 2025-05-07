@@ -1,4 +1,5 @@
 <template>
+  <div v-if="isAdmin">
     <div class="mypage-wrapper">
       <div class="mypage-container-title">
         <h1>사용자 목록</h1>
@@ -17,10 +18,14 @@
         </div>
       </div>
     </div>
+  </div>
+  <div v-else>
+    <p>⚠️ 관리자만 사용자 페이지를 볼 수 있습니다.</p>
+  </div>
   </template>
 
 <script setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
@@ -30,6 +35,12 @@ onMounted(() => {
 })
 const userList = computed(() => store.state.board.userList);
 console.log(store.state.board.userList);
+
+
+
+const isAdmin = computed(() => store.state.board.userList);
+
+
 </script>
 
 <style scoped>

@@ -52,7 +52,7 @@ class AuthController extends Controller
 
         // $user = $request->user();
         // $user = Auth::user();
-        $user = User::where('email', $request->email)->first();
+        $user = User::with('admin')->where('email', $request->email)->first();
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([

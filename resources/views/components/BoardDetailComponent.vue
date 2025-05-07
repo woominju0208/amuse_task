@@ -26,7 +26,7 @@
               <div class="user-card">
                 <h3>{{ task.content }}</h3>
                 <!-- <span>상태: {{ task.status }}</span> -->
-                <select class="status-select" v-model="task.status" @change="updateStatus(task)">
+                <select class="status-select" v-model="task.status" @change="updateStatusTask(boardDetail.project_id, task)">
                     <option value="대기">대기</option>
                     <option value="진행중">진행중</option>
                     <option value="완료">완료</option>
@@ -88,8 +88,12 @@ onMounted(async () => {
 const boardDetail = computed(() => store.state.board.boardDetail);
 console.log(store.state.board.boardDetail);
 
-function updateStatus(project) {
-    store.dispatch('board/updateStatus', project);
+function updateStatusTask(projectId, task) {
+  store.dispatch('board/updateStatusTask', {
+        project_id: projectId,
+        task_id: task.task_id,
+        status: task.status,
+    });
 };
 
 const project_id = computed(() => route.params.id);

@@ -8,6 +8,7 @@ export default {
         boardDetail: [],
         userList: [],
         commentList: [],
+        user: null,
     }),
     mutations: {
         setBoardList(state, boardList) {
@@ -25,6 +26,9 @@ export default {
         setCommentList(state, commentList) {
             state.commentList = commentList;
         },
+        setUser(state, payload) {
+            state.user = payload;
+        }
 
 
     },
@@ -58,6 +62,25 @@ export default {
             }
           
             axios.post(url, { status: project.status }, config)
+              .then(response => {
+                console.log("상태 변경 완료", response.data);
+              })
+              .catch(error => {
+                console.error("상태 변경 실패", error);
+              });
+          },
+
+        // 테스크 상태변경
+        updateStatusTask(context, payload) {
+            const url = `/api/boards/${payload.project_id}/task/${payload.task_id}/status`;
+            const config = {
+              headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+                'Content-Type': 'application/json',
+              }
+            }
+          
+            axios.post(url, { status: payload.status }, config)
               .then(response => {
                 console.log("상태 변경 완료", response.data);
               })
@@ -195,6 +218,12 @@ export default {
             })
             .catch(error => {
                 console.log(error);
+                if (error.response && error.response.status === 403) {
+                    alert('관리자만 접근할 수 있습니다.');
+                    router.push('/boards');
+                } else {
+                    console.error('사용자 목록 요청 실패:', error);
+                }
             });
         },
 
@@ -245,8 +274,6 @@ export default {
 
     },
     getters: {
-        getNextPage(state) {
-            return state.page + 1;
-        },
+        isAdmin: (state) => state.user?.is_admin === true
     }
 }

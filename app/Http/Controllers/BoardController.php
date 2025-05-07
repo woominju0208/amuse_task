@@ -26,7 +26,7 @@ class BoardController extends Controller
     // 프로젝트 상태 변경
     public function updateStatus(Request $request, $id) {
 
-        Log::info('상태변경 요청 도착', [$id, $request->all()]);
+        // Log::info('상태변경 요청 도착', [$id, $request->all()]);
         $project = Project::findOrFail($id);
         $project->status = $request->input('status');
         $project->save();
@@ -35,6 +35,21 @@ class BoardController extends Controller
             'success' => true,
             'msg' => '상태 업데이트 성공',
             'updated' => $project->status,
+        ]);
+    }
+
+    // 테스크 상태 변경
+    public function updateStatusTask(Request $request, $project_id, $task_id) {
+
+        Log::info('상태변경 요청 도착', [$project_id, $task_id, $request->all()]);
+        $task = Task::findOrFail($task_id);
+        $task->status = $request->input('status');
+        $task->save();
+
+        return response()->json([
+            'success' => true,
+            'msg' => '상태 업데이트 성공',
+            'updated' => $task->status,
         ]);
     }
 
@@ -161,6 +176,5 @@ class BoardController extends Controller
         ];
         
         return response()->json($responseData, 200);
-
     }
 }

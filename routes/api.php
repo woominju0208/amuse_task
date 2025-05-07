@@ -28,6 +28,8 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('/boards', [BoardController::class, 'index'])->name('boards.index');
     // 프로젝트 상태 변경
     Route::post('/boards/{id}/status', [BoardController::class, 'updateStatus']);
+    // 테스크 상태 변경
+    Route::post('/boards/{project_id}/task/{task_id}/status', [BoardController::class, 'updateStatusTask']);
     // 프로젝트 작성
     Route::post('/boards/store', [BoardController::class, 'store'])->name('boards.store');
     // 프로젝트 상세
@@ -42,7 +44,8 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('/boards/{id}/task', [BoardController::class, 'taskStore'])->name('tasks.store');
 
     // 사용자 출력
-    Route::get('/users', [BoardController::class, 'userIndex'])->name('users.index');
+    Route::get('/users', [BoardController::class, 'userIndex'])->middleware('admin.only')->name('users.index');
+    // Route::get('/users', [BoardController::class, 'userIndex'])->name('users.index');
 
     // 댓글 출력
     Route::get('/boards/{id}/comments', [CommentController::class, 'index'])->name('comments.index');
