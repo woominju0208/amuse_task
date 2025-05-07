@@ -7,6 +7,7 @@ export default {
         boardList: [],
         boardDetail: [],
         userList: [],
+        commentList: [],
     }),
     mutations: {
         setBoardList(state, boardList) {
@@ -20,6 +21,9 @@ export default {
         // },
         setUserList(state, userList) {
             state.userList = userList;
+        },
+        setCommentList(state, commentList) {
+            state.commentList = commentList;
         },
 
 
@@ -74,7 +78,7 @@ export default {
             axios.get(url, config)
             .then(response => {
                 context.commit('setBoardDetail', response.data.boardDetail);
-                console.log(response.data.boardDetail);
+                // console.log(response.data.boardDetail);
             })
             .catch(error => {
                 console.log(error);
@@ -106,7 +110,7 @@ export default {
             });
         },
 
-        // 테스크 생성
+        // 테스크 작성
         storeTask(context, data) {
             const url =  `/api/boards/${data.project_id}/task`;
             const config = {
@@ -116,10 +120,12 @@ export default {
                 }
             };
 
-            axios.post(url, {
+            const payload = {
                 project_id: data.project_id,
                 content: data.content
-              }, config)
+            };
+
+            axios.post(url, payload, config)
             .then(response => {
                 router.back();
             })
@@ -128,6 +134,53 @@ export default {
             });
         },
 
+        // 프로젝트 수정
+        updateBoard(context, data) {
+            const url = `/api/boards/${data.project_id}`;
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' +localStorage.getItem('accessToken'),
+                }
+            };
+
+            const payload = {
+                title: data.title,
+                description: data.description
+            };
+
+            axios.put(url, payload, config)
+            .then(response => {
+                alert('프로젝트가 수정되었습니다.');
+                router.replace('/boards');
+            })
+            .catch(error => {
+                alert('수정 중 오류가 발생했습니다.');
+                console.log(error.response.data.errors);
+            });
+
+        },
+
+        // 프로젝트 삭제
+        DeleteBoard(context, data) {
+            if(!confirm('프로젝트를 삭제하시겠습니까?')) {
+                return;
+            }
+            const url = `/api/boards/${data.project_id}`;
+            const config = {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+                }
+            }
+            axios.delete(url, config)
+            .then(response => {
+                alert('프로젝트 삭제');			
+            })
+            .catch(error => {
+                console.error(error);
+            });
+		},
+        // 사용자 페이지
         indexUser(context, data) {
             const url = '/api/users/';
             const config = {
@@ -143,7 +196,51 @@ export default {
             .catch(error => {
                 console.log(error);
             });
-        }
+        },
+
+        // 댓글 출력
+        indexComment(context, data) {
+            const url = `/api/boards/${data.project_id}/comments`;
+            const config = {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+                }}
+            
+            axios.get(url, config)
+            .then(response => {
+                console.log('댓글 응답 도착:', response.data);
+                context.commit('setCommentList', response.data.commentList);
+            })
+            .catch(error => {
+                console.log("API 호출 실패");
+                console.log(error);
+            });
+        },
+
+        // 댓글 작성
+        storeComment(context, data) {
+            const url =  `/api/boards/${data.project_id}/comments/store`;
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' +localStorage.getItem('accessToken'),
+                }
+            };
+
+            const payload = {
+                project_id: data.project_id,
+                comment: data.comment
+            };
+
+            axios.post(url, payload, config)
+            .then(response => {
+                alert('댓글을 작성하였습니다.');
+                location.reload(true);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        },
 
 
     },

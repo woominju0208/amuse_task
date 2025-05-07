@@ -6,6 +6,7 @@ import UsersComponent from '../views/components/UsersComponent.vue';
 import BoardCreateComponent from '../views/components/BoardCreateComponent.vue';
 import BoardDetailComponent from '../views/components/BoardDetailComponent.vue';
 import TaskCreateComponent from '../views/components/TaskCreateComponent .vue';
+import BoardModifyComponent from '../views/components/BoardModifyComponent.vue';
 
 
 const routes=[
@@ -43,6 +44,11 @@ const routes=[
 	{
 		path: '/boards/:id/task',
 		component: TaskCreateComponent,
+	},
+	// 프로젝트 수정
+	{
+		path: '/boards/:id/modify',
+		component: BoardModifyComponent,
 	},
 ];
 

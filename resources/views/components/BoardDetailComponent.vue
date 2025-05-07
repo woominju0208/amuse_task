@@ -4,10 +4,10 @@
         <h1 v-if="boardDetail" class="form-title">{{ boardDetail.title }}</h1>
 
         <div class="button-group">
-          <router-link to="/boards/store">
+          <router-link :to="`/boards/${project_id}/modify`">
             <button class="create-btn">수정</button>
           </router-link>
-          <button class="delete-btn">삭제</button>
+          <button class="delete-btn" @click="deleteBoard(project_id)">삭제</button>
         </div>
       </div>
   
@@ -47,32 +47,21 @@
         </div> -->
 
         <!-- 댓글 -->
-        <!-- <h2 class="comment-no-data" v-if="!PostComment || PostComment.length === 0">새로운 댓글을 작성 해 주세요.</h2> -->
-        <div class="comment-box">
-          <img class="user-icon" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="user icon" />
-            <div class="comment-txt">
-                <p>댓글작성했어요.</p>
-          <div class="etc-btn">
-            <!-- 삭제버튼 -->
-            <!-- <button v-if="item.user.user_id === $store.state.auth.userInfo.user_id" @click="deleteComment(item.post_comment_id, key)" class="btn-comment-delete"><img style="width: 25px;" src="/developImg/btn-delete.png" alt=""></button> -->
-          </div>
-                <div class="comment-created">
-                    <span class="comment-name">왕만두</span>
-                    <span class="comment-date">2025.01.01</span>
-                </div>
-            </div>
+        <div class="postdetail-comment-form-box">
+          <h2>댓글목록</h2>
+          <textarea v-model="commentInfo.comment" :placeholder="placeholder" name="comment" minlength="1" maxlength="200"></textarea>
+          <button @click="$store.dispatch('board/storeComment', commentInfo)" class="btn-postdetail-comment create-btn" type="button">등록</button>
         </div>
-        <div class="comment-box">
+
+        <div v-for="item in commentList" :key="item.comment_id" class="comment-box">
           <img class="user-icon" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="user icon" />
             <div class="comment-txt">
-                <p>댓글작성했어요.댓글작성했어요.댓글작성했어요.댓글작성했어요.댓글작성했어요.댓글작성했어요.댓글작성했어요.댓글작성했어요.</p>
+                <p>{{ item.comment }}</p>
           <div class="etc-btn">
-            <!-- 삭제버튼 -->
-            <!-- <button v-if="item.user.user_id === $store.state.auth.userInfo.user_id" @click="deleteComment(item.post_comment_id, key)" class="btn-comment-delete"><img style="width: 25px;" src="/developImg/btn-delete.png" alt=""></button> -->
           </div>
                 <div class="comment-created">
-                    <span class="comment-name">왕만두</span>
-                    <span class="comment-date">2025.01.01</span>
+                    <span class="comment-name">{{ item.user.name }}</span>
+                    <span class="comment-date">{{ item.created_at }}</span>
                 </div>
             </div>
         </div>
@@ -80,17 +69,20 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, onMounted, reactive, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 
 const route = useRoute();
 const project = ref(null);
 const store = useStore();
+const router = useRouter();
 
-onMounted(() => {
+onMounted(async () => {
   const id = route.params.id;
-  store.dispatch('board/showBoard', id);
+  await store.dispatch('board/showBoard', id);
+  await store.dispatch('board/indexComment', { project_id: id });
+  commentInfo.project_id = route.params.id;
 });
 
 const boardDetail = computed(() => store.state.board.boardDetail);
@@ -98,9 +90,22 @@ console.log(store.state.board.boardDetail);
 
 function updateStatus(project) {
     store.dispatch('board/updateStatus', project);
-}
+};
 
 const project_id = computed(() => route.params.id);
+
+const deleteBoard = (id) => {
+  store.dispatch('board/DeleteBoard', {project_id: id});
+  router.replace('/boards');
+};
+
+const commentList = computed(() => store.state.board.commentList);
+// console.log('댓글 리스트:', commentList.value);
+
+const commentInfo = reactive({
+    project_id: route.params.id,
+    comment: '',
+});
 
 </script>
 
@@ -273,6 +278,38 @@ const project_id = computed(() => route.params.id);
     .comment-no-data {
       margin-top: 50px;
       font-size: 30px;
-        color: #2986FF;
+      color: #2986FF;
+    }
+
+    .postdetail-comment-form-box {
+      width: 100%;
+      width: 1150px;
+      padding: 20px;
+      display: grid;
+    }
+
+    .postdetail-comment-form-box > textarea {
+      border: solid 1px #000;
+      border-radius: 5px;
+      resize: none;
+      width: 100%;
+      height: 10em;
+      font-size: 15px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .btn-postdetail-comment {
+      width: 100px;
+      padding: 10px;
+      font-size: 15px;
+      border: none;
+      cursor: pointer;
+      justify-self: flex-end;
+    }
+
+
+    .comment-txt {
+      width: 100%;
     }
 </style>

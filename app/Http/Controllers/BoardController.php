@@ -51,7 +51,8 @@ class BoardController extends Controller
 
         // insert
         $board = Project::create($insertData);
-        $board = Project::with('user')->find($board->user_id);
+        // $board = Project::with('user')->find($board->user_id);
+        $board->load('user');
 
         $responseData = [
             'success' => true
@@ -73,7 +74,7 @@ class BoardController extends Controller
             $insertData['user_id'] = $user->user_id;
             $insertData['status'] = '대기';
     
-            Log::info('Insert Data:', $insertData);
+            // Log::info('Insert Data:', $insertData);
     
     
             // insert
@@ -117,6 +118,40 @@ class BoardController extends Controller
         return response()->json($responseData, 200);
     }
 
+    // 프로젝트 수정
+    public function update(Request $request, $id) {
+        $board = Project::findOrFail($id);
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:50',
+            'description' => 'nullable|string|max:200',
+        ]);
+    
+        $board->update($validated);
+
+        $responseData = [
+            'success' => true
+            ,'msg' => '프로젝트 수정 성공'
+            ,'board' => $board->toArray()
+        ];
+        
+        return response()->json($responseData, 200);
+    }
+
+    // 프로젝트 삭제
+	public function deleteBoard($id) {
+		// Project::beginTransaction();
+		Project::destroy($id);
+		// Project::commit();
+
+		$responseData = [
+			'success' => true
+			,'msg' => '프로젝트 삭제'
+		];
+		return response()->json($responseData, 200);
+	}
+
+    // 사용자 출력
     public function userIndex(Request $request) {
         $userList = User::with('project')->orderBy('created_at', 'DESC')->get();
         $responseData = [
