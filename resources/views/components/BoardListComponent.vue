@@ -12,7 +12,11 @@
                 <p class="owner" @click="goToDetail(item.project_id)" v-if="item.user">담당자: {{ item.user.name }}</p>
                 <p class="owner" v-else>담당자: 없음</p>
     
-                <select class="status-select" v-model="item.status" @change="updateStatus(item)">
+                <select class="status-select" :class="{
+                        waiting: item.status === '대기',
+                        inprogress: item.status === '진행중',
+                        done: item.status === '완료'
+                      }" v-model="item.status" @change="updateStatus(item)">
                     <option value="대기">대기</option>
                     <option value="진행중">진행중</option>
                     <option value="완료">완료</option>
@@ -162,5 +166,15 @@ function goToDetail(id) {
         display: flex;
         justify-content: space-between;
         align-items: center;
+    }
+
+    .status-select.waiting {
+      color: #f38b04;
+    }
+    .status-select.inprogress {
+      color: #3bbb00;
+    }
+    .status-select.done {
+      color: #2454a0;
     }
   </style>

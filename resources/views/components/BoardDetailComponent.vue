@@ -13,8 +13,14 @@
   
         <div v-if="boardDetail && boardDetail.user" class="main-container">
             <p>설명: {{ boardDetail.description }}</p>
-            <p>상태: {{ boardDetail.status }}</p>
-            <p>담당자: {{ boardDetail.user.name }}</p>
+            <p>상태: 
+              <span :class="{
+                'status-waiting': boardDetail.status === '대기',
+                'status-inprogress': boardDetail.status === '진행중',
+                'status-done': boardDetail.status === '완료'
+              }">
+                {{ boardDetail.status }}</span>
+            </p>
         </div>
       <div class="main-container">
           <div class="task">
@@ -26,7 +32,11 @@
               <div class="user-card">
                 <h3>{{ task.content }}</h3>
                 <!-- <span>상태: {{ task.status }}</span> -->
-                <select class="status-select" v-model="task.status" @change="updateStatusTask(boardDetail.project_id, task)">
+                <select class="status-select" :class="{
+                        waiting: task.status === '대기',
+                        inprogress: task.status === '진행중',
+                        done: task.status === '완료'
+                      }" v-model="task.status" @change="updateStatusTask(boardDetail.project_id, task)">
                     <option value="대기">대기</option>
                     <option value="진행중">진행중</option>
                     <option value="완료">완료</option>
@@ -311,9 +321,26 @@ const commentInfo = reactive({
       cursor: pointer;
       justify-self: flex-end;
     }
-
-
     .comment-txt {
       width: 100%;
+    }
+
+    .status-select.waiting {
+      color: #f38b04;
+    }
+    .status-select.inprogress {
+      color: #3bbb00;
+    }
+    .status-select.done {
+      color: #2454a0;
+    }
+    .status-waiting {
+      color: #f38b04;
+    }
+    .status-inprogress {
+      color: #3bbb00;
+    }
+    .status-done {
+      color: #2454a0;
     }
 </style>
