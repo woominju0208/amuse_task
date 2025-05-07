@@ -1,11 +1,7 @@
 # 프로젝트 이름 : 미니프로젝트 매니저
 
 Vue + Laravel을 이용한 미니 프로젝트 관리 웹페이지
-![alt text](image.png)
-![alt text](image-1.png)
-![alt text](image-2.png)
-![alt text](image-3.png)
-![alt text](image-4.png)
+
 ---
 
 ## 프로젝트 개요
@@ -48,6 +44,15 @@ Vue + Laravel을 이용한 미니 프로젝트 관리 웹페이지
 - 유효하지 않은 url 방지
 - 상태(대기->진행중->완료) 별 컬러 추가
 
+---
+
+![alt text](image.png)
+![alt text](image-1.png)
+![alt text](image-2.png)
+![alt text](image-3.png)
+![alt text](image-4.png)
+
+---
 
 ## 💾 설치 방법
 
