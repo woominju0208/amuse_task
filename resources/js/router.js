@@ -30,7 +30,7 @@ const routes=[
 	},
 
 	{
-		path: '/boards/:id',
+		path: '/boards/:id(\\d+)',
 		component: BoardDetailComponent,
 	},
 	{
@@ -50,11 +50,27 @@ const routes=[
 		path: '/boards/:id/modify',
 		component: BoardModifyComponent,
 	},
+
+	// 없는 경로 출력x
+	{
+		path: '/:catchAll(.*)',
+		name: 'NotFound',
+		component: null,
+	},
 ];
 
 const router = createRouter({
 	history: createWebHistory()
 	,routes
 });
+
+router.beforeEach((to, from, next) => {
+	if (to.name === 'NotFound') {
+	  alert('존재하지 않는 페이지입니다.');
+	  next('/');
+	} else {
+	  next();
+	}
+  });
 
 export default router;

@@ -105,6 +105,15 @@ export default {
             })
             .catch(error => {
                 console.log(error);
+                if (error.response && error.response.status === 403) {
+                    alert('잘못된 접근입니다');
+                    router.push('/boards');
+                } else if(error.response && error.response.status === 500) {
+                    alert('잘못된 접근입니다');
+                    router.push('/boards');
+                } else {
+                    console.error('사용자 목록 요청 실패:', error);
+                }
             }); 
         },
         // 프로젝트 생성
@@ -154,6 +163,15 @@ export default {
             })
             .catch(error => {
                 console.log(error);
+                if (error.response && error.response.status === 403) {
+                    alert('잘못된 접근입니다');
+                    router.push('/boards');
+                } else if(error.response && error.response.status === 500) {
+                    alert('잘못된 접근입니다');
+                    router.push('/boards');
+                } else {
+                    console.error('사용자 목록 요청 실패:', error);
+                }
             });
         },
 
@@ -178,6 +196,15 @@ export default {
                 router.replace('/boards');
             })
             .catch(error => {
+                if (error.response && error.response.status === 403) {
+                    alert('잘못된 접근입니다');
+                    router.push('/boards');
+                } else if(error.response && error.response.status === 500) {
+                    alert('잘못된 접근입니다');
+                    router.push('/boards');
+                } else {
+                    console.error('사용자 목록 요청 실패:', error);
+                }
                 alert('수정 중 오류가 발생했습니다.');
                 console.log(error.response.data.errors);
             });
@@ -217,9 +244,9 @@ export default {
                 // console.log('API 응답 도착:', response.data.userList);
             })
             .catch(error => {
-                console.log(error);
+                console.error('사용자 목록 요청 실패:', error);
                 if (error.response && error.response.status === 403) {
-                    alert('관리자만 접근할 수 있습니다.');
+                    alert('관리자 권한이 없습니다.');
                     router.push('/boards');
                 } else {
                     console.error('사용자 목록 요청 실패:', error);
